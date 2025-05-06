@@ -45,9 +45,7 @@ public class PlanSpec {
                     checkoutDefaultRepository,
                     new MavenTask()
                         .executableLabel("Maven 3")
-                        .goal("package")
-                        .hasTests(true)
-
+                        .goal("test package")
                 ).artifacts(new Artifact()
                     .name("Acme™ Application")
                     .copyPatterns("target/acme-*.jar")
