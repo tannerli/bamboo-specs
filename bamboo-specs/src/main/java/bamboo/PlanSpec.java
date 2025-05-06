@@ -41,6 +41,7 @@ public class PlanSpec {
                 .tasks(
                     checkoutDefaultRepository,
                     new MavenTask()
+                        .executableLabel("Maven 3")
                         .goal("package")
                         .hasTests(true)
 
