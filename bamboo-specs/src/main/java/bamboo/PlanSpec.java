@@ -1,5 +1,6 @@
 package bamboo;
 
+import com.atlassian.bamboo.specs.api.BambooSpec;
 import com.atlassian.bamboo.specs.api.builders.BambooKey;
 import com.atlassian.bamboo.specs.api.builders.permission.PermissionType;
 import com.atlassian.bamboo.specs.api.builders.permission.Permissions;
@@ -18,6 +19,7 @@ import com.atlassian.bamboo.specs.builders.task.VcsCheckoutTask;
 import com.atlassian.bamboo.specs.builders.trigger.RepositoryPollingTrigger;
 import com.atlassian.bamboo.specs.util.BambooServer;
 
+@BambooSpec
 public class PlanSpec {
 
   public Plan plan() {
