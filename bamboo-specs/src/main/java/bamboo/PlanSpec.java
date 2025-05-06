@@ -22,18 +22,21 @@ import com.atlassian.bamboo.specs.util.BambooServer;
 @BambooSpec
 public class PlanSpec {
 
+  public static final String PROJECT_KEY = "MS";
+  public static final String PLAN_KEY = "VS";
+
   public Plan plan() {
     VcsCheckoutTask checkoutDefaultRepository = new VcsCheckoutTask()
         .description("Checkout Default Repository")
         .checkoutItems(new CheckoutItem().defaultRepository());
 
     Project project = new Project()
-        .key(new BambooKey("MS"))
+        .key(new BambooKey(PROJECT_KEY))
         .name("MTA Spielwiese");
 
     return new Plan(project,
         "Plan via Specs",
-        new BambooKey("VS"))
+        new BambooKey(PLAN_KEY))
         .stages(
             new Stage("Default Stage")
             .jobs(new Job("Default Job",
@@ -58,7 +61,7 @@ public class PlanSpec {
   }
 
   public PlanPermissions planPermission() {
-    return new PlanPermissions(new PlanIdentifier("MS", "EB"))
+    return new PlanPermissions(new PlanIdentifier(PROJECT_KEY, PLAN_KEY))
         .permissions(new Permissions().
             userPermissions("bamboo", PermissionType.VIEW, PermissionType.EDIT, PermissionType.BUILD,
                 PermissionType.CLONE, PermissionType.ADMIN, PermissionType.VIEW_CONFIGURATION,
