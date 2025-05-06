@@ -9,11 +9,13 @@ import com.atlassian.bamboo.specs.api.builders.plan.Job;
 import com.atlassian.bamboo.specs.api.builders.plan.Plan;
 import com.atlassian.bamboo.specs.api.builders.plan.PlanIdentifier;
 import com.atlassian.bamboo.specs.api.builders.plan.Stage;
+import com.atlassian.bamboo.specs.api.builders.plan.artifact.Artifact;
 import com.atlassian.bamboo.specs.api.builders.plan.branches.BranchCleanup;
 import com.atlassian.bamboo.specs.api.builders.plan.branches.PlanBranchManagement;
 import com.atlassian.bamboo.specs.api.builders.plan.configuration.ConcurrentBuilds;
 import com.atlassian.bamboo.specs.api.builders.project.Project;
 import com.atlassian.bamboo.specs.builders.task.CheckoutItem;
+import com.atlassian.bamboo.specs.builders.task.MavenTask;
 import com.atlassian.bamboo.specs.builders.task.VcsCheckoutTask;
 import com.atlassian.bamboo.specs.builders.trigger.RepositoryPollingTrigger;
 import com.atlassian.bamboo.specs.util.BambooServer;
@@ -21,7 +23,11 @@ import com.atlassian.bamboo.specs.util.BambooServer;
 public class PlanSpec {
 
   public Plan plan() {
-    final Plan plan = new Plan(new Project()
+    VcsCheckoutTask checkoutDefaultRepository = new VcsCheckoutTask()
+        .description("Checkout Default Repository")
+        .checkoutItems(new CheckoutItem().defaultRepository());
+
+    return new Plan(new Project()
         .oid(new BambooOid("1l2xac5plwzcx"))
         .key(new BambooKey("MS"))
         .name("MTA Spielwiese"),
@@ -30,19 +36,26 @@ public class PlanSpec {
         .oid(new BambooOid("1l2nl4kce3669"))
         .enabled(false)
         .pluginConfigurations(new ConcurrentBuilds())
-        .stages(new Stage("Default Stage")
+        .stages(
+            new Stage("Default Stage")
             .jobs(new Job("Default Job",
                 new BambooKey("JOB1"))
-                .tasks(new VcsCheckoutTask()
-                    .description("Checkout Default Repository")
-                    .checkoutItems(new CheckoutItem().defaultRepository()))))
-        .linkedRepositories("mta-test")
+                .tasks(
+                    checkoutDefaultRepository,
+                    new MavenTask()
+                        .goal("package")
+                        .hasTests(true)
 
+                ).artifacts(new Artifact()
+                    .name("Acme™ Application")
+                    .copyPatterns("target/acme-*.jar")
+                )))
+        .linkedRepositories("mta-test")
         .triggers(new RepositoryPollingTrigger())
+
         .planBranchManagement(new PlanBranchManagement()
             .delete(new BranchCleanup())
             .notificationForCommitters());
-    return plan;
   }
 
   public PlanPermissions planPermission() {
