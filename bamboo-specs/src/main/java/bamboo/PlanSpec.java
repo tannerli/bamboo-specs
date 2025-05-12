@@ -49,7 +49,9 @@ public class PlanSpec {
                         .hasTests(true)
                 ).artifacts(new Artifact()
                     .name("Acme™ Application")
-                    .copyPatterns("target/acme-*.jar")
+                        .copyPatterns("target/acme-*.jar"),
+                    new Artifact("test")
+                        .copyPatterns("*.txt")
                 )))
         .linkedRepositories("mta-test")
         .triggers(new RepositoryPollingTrigger())
